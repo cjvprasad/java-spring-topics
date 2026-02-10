@@ -5,184 +5,401 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Java & Spring Boot Curriculum</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        h2 { color: #2980b9; margin-top: 40px; border-left: 5px solid #2980b9; padding-left: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #3498db; color: white; position: sticky; top: 0; }
-        tr:hover { background-color: #f1f1f1; }
-        .index-col { width: 60px; font-weight: bold; color: #7f8c8d; }
-        .status-col { width: 80px; text-align: center; }
-        input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
-        .completed { text-decoration: line-through; color: #95a5a6; }
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --completed: #94a3b8;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            line-height: 1.5; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 10px; 
+        }
+
+        .container { 
+            max-width: 1000px; 
+            margin: auto; 
+            background: var(--card-bg); 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); 
+        }
+
+        h1 { text-align: center; color: #0f172a; font-size: 1.5rem; margin-bottom: 20px; }
+
+        /* SEARCH STYLING */
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        #searchInput:focus {
+            border-color: var(--primary);
+        }
+
+        /* TAB STYLING */
+        .tabs {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            font-weight: 600;
+            gap: 8px;
+            border: none;
+            background: none;
+            color: var(--secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .match-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .phase-section { display: none; }
+        .phase-section.active { display: block; }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        /* COMPACT MOBILE VIEW */
+        @media (max-width: 767px) {
+            thead { display: none; }
+            tr {
+                display: block;
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                margin-bottom: 10px;
+                padding: 10px;
+                position: relative;
+            }
+            td { display: block; border: none; padding: 2px 0; }
+            .status-col { position: absolute; top: 10px; right: 10px; }
+            .index-col { font-size: 0.75rem; opacity: 0.8; }
+            .title-cell { font-size: 0.9rem; padding-right: 35px; line-height: 1.3; margin-bottom: 5px; }
+            .preview-col { border-top: 1px solid #f1f5f9; margin-top: 8px; padding-top: 8px !important; }
+            .btn-preview { padding: 5px 10px; font-size: 0.75rem; margin: 2px 4px 2px 0; }
+            .tab-btn{
+                padding: 6px;
+                font-weight: 600;
+                gap: 4px;
+            }
+
+        }
+
+        /* DESKTOP VIEW */
+        @media (min-width: 768px) {
+            .container { padding: 30px; }
+            h1 { font-size: 2rem; }
+            thead { display: table-header-group; }
+            tr { display: table-row; }
+            td, th { padding: 12px 15px; border-bottom: 1px solid var(--border); text-align: start; }
+            th { background: #f8fafc; font-size: 0.8rem; text-transform: uppercase; color: var(--secondary); }
+            .status-col { width: 60px; }
+            .index-col { width: 60px; }
+            .preview-col { width: 250px; }
+            
+            /* Enhanced Desktop Padding */
+            .btn-preview {
+                padding: 8px 18px;
+                margin: 4px 8px 4px 0;
+                font-size: 0.85rem;
+            }
+        }
+
+        .completed { text-decoration: line-through; color: var(--completed); opacity: 0.6; }
+
+        .btn-preview {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary);
+            border: 1px solid #dbeafe;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn-preview:hover { background: #dbeafe; }
+
+        .btn-disabled { background: #f1f5f9; color: #cbd5e1; pointer-events: none; border: 1px solid #e2e8f0; }
+        input[type="checkbox"] { transform: scale(1.1); cursor: pointer; }
+        
+        .no-results { text-align: center; padding: 20px; color: var(--secondary); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Java & Spring Boot Roadmap</h1>
+    <h1>🚀 Java & Spring Boot Roadmap</h1>
 
-    <h2>Phase 1: Core Java</h2>
-    <table id="java-table">
-        <thead>
-            <tr>
-                <th class="status-col">Done</th>
-                <th class="index-col">#</th>
-                <th>Lecture Title</th>
-            </tr>
-        </thead>
-        <tbody id="java-body"></tbody>
-    </table>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search topics (e.g. HashMap, OOPS, JPA)..." onkeyup="filterTopics()">
+    </div>
 
-    <h2>Phase 2: Spring Boot & Microservices</h2>
-    <table id="springboot-table">
-        <thead>
-            <tr>
-                <th class="status-col">Done</th>
-                <th class="index-col">#</th>
-                <th>Lecture Title</th>
-            </tr>
-        </thead>
-        <tbody id="springboot-body"></tbody>
-    </table>
+    <div class="tabs">
+        <button class="tab-btn active" id="java-tab" onclick="showPhase('java')">
+            Phase 1: Java <span class="match-count" id="java-count">0</span>
+        </button>
+        <button class="tab-btn" id="springboot-tab" onclick="showPhase('springboot')">
+            Phase 2: Spring Boot <span class="match-count" id="springboot-count">0</span>
+        </button>
+    </div>
+
+    <div id="java-section" class="phase-section active">
+        <table>
+            <thead>
+                <tr>
+                    <th class="status-col">Done</th>
+                    <th class="index-col">#</th>
+                    <th>Topic</th>
+                    <th class="preview-col">Resources</th>
+                </tr>
+            </thead>
+            <tbody id="java-body"></tbody>
+        </table>
+    </div>
+
+    <div id="springboot-section" class="phase-section">
+        <table>
+            <thead>
+                <tr>
+                    <th class="status-col">Done</th>
+                    <th class="index-col">#</th>
+                    <th>Topic</th>
+                    <th class="preview-col">Resources</th>
+                </tr>
+            </thead>
+            <tbody id="springboot-body"></tbody>
+        </table>
+    </div>
 </div>
 
 <script>
-    const data = {
-        java: [
-            {"index": 1, "title": "1. OOPs Fundamentals | 4 Pillar of Java"},
-            {"index": 2, "title": "2. How Java Program Works and its 3 Important Components (JVM, JRE and JDK)"},
-            {"index": 3, "title": "3. Quiz Question: Why only 1 Public Class in JAVA file"},
-            {"index": 4, "title": "4. Java Variables - Part1 | Primitive Data Types in Depth"},
-            {"index": 5, "title": "5. How FLOAT and DOUBLE Number Stored in Memory? | IEEE 754 Representation"},
-            {"index": 6, "title": "6. Java Variables - Part2 | Reference/Non-Primitive Data Types in Depth"},
-            {"index": 7, "title": "7. Java Methods in Depth | Different Types of Methods with Examples"},
-            {"index": 8, "title": "8. Java Constructor in Depth | Different Types of Constructor with Examples"},
-            {"index": 9, "title": "9. Java Memory Management and Garbage Collection in Depth"},
-            {"index": 10, "title": "10. Java Classes - Part1 | Nested, Concrete, Abstract, Object, Super & Sub Classes"},
-            {"index": 11, "title": "11. Java Generic Classes | Java Classes in Depth - Part2"},
-            {"index": 12, "title": "12. Java Enum, POJO and Final Classes Explained with Examples | Java Classes - Part3"},
-            {"index": 13, "title": "13. Java Singleton & Immutable Class Explained with Examples | Java Classes - Part4"},
-            {"index": 14, "title": "14. Java Interface in Depth - Part1"},
-            {"index": 15, "title": "15. Default, Static & Private Method in Interface - Java Interfaces Part-2"},
-            {"index": 16, "title": "16. Functional Interface and Lambda Expression - Java8 | Java Interface Part3"},
-            {"index": 17, "title": "17. Java Reflection in Depth (Using Examples)"},
-            {"index": 18, "title": "18. Java Annotations with Examples"},
-            {"index": 19, "title": "19. Exception Handling in Java with Examples"},
-            {"index": 20, "title": "20. Operators in Java | Different Types of Operators in JAVA"},
-            {"index": 21, "title": "21. Control Flow Statements in Java | Decision Making, Looping & Branching Statement"},
-            {"index": 22, "title": "22. Collections in Java - Part1 | Java Collections Framework in depth"},
-            {"index": 23, "title": "23. Collections in Java - Part2 | Comparator Vs Comparable | PriorityQueue"},
-            {"index": 24, "title": "24. Collections in Java - Part3 | Deque and List in Depth"},
-            {"index": 25, "title": "25. Collections in Java - Part4 | HashMap Internal Working in Java"},
-            {"index": 26, "title": "26. Collections in Java - Part5 | LinkedHashMap and TreeMap in depth"},
-            {"index": 27, "title": "27. Collections in Java - Part6 | SET"},
-            {"index": 28, "title": "28. Streams in Java8 | Collections in Java - Part7"},
-            {"index": 29, "title": "29. Multithreading and Concurrency in Java: Part1"},
-            {"index": 30, "title": "30. Thread Creation, Thread Lifecycle and Inter-Thread Communication"},
-            {"index": 31, "title": "31. Thread Joining, Daemon Thread, Thread Priority | Multithreading in Java"},
-            {"index": 32, "title": "32. Locks and Condition | Java Multithreading"},
-            {"index": 33, "title": "33. Lock-Free Concurrency | Compare-and-Swap"},
-            {"index": 34, "title": "34. Thread Pools in Java | ThreadPoolExecutor Framework | Multithreading"},
-            {"index": 35, "title": "35. Java8 CompletableFuture | Future & Callable in Java"},
-            {"index": 36, "title": "36. ForkJoinPool, WorkStealingPool, FixedThreadPool, CachedThreadPool & SingleThread"},
-            {"index": 37, "title": "37. Java ScheduledThreadPoolExecutor || Shutdown Vs AwaitTermination"},
-            {"index": 38, "title": "38. Java VirtualThreads vs Normal Threads || ThreadLocal in Java"},
-            {"index": 39, "title": "39. Project Lombok in Java in depth | Lombok top 10 features"},
-            {"index": 40, "title": "40. Java 21 : SequencedCollection, SequencedSet and SequencedMap"},
-            {"index": 41, "title": "41. Java 17: Sealed Classes and Interfaces"},
-            {"index": 42, "title": "42. Java 14: Switch Expressions Deep Dive"},
-            {"index": 43, "title": "43. Java 16: Pattern Matching for instanceof"},
-            {"index": 44, "title": "44. Java 21: Pattern Matching for switch"},
-            {"index": 45, "title": "45. Java 16: Record class"},
-            {"index": 46, "title": "46. Java 15: Text Blocks"},
-            {"index": 47, "title": "47. Java Optional from Java 8 to 11"}
+    const data =  {java:[
+            {"index": 1, "title": "1. OOPs Fundamentals | 4 Pillar of Java","link":["https://drive.google.com/file/d/1eg_I2kdII2_KPtzGifky-YEvFcgaCX4H/view"]},
+            {"index": 2, "title": "2. How Java Program Works and its 3 Important Components (JVM, JRE and JDK)","link":["https://drive.google.com/file/d/1orNECv5ucicgyhcC58tsQ10lTqj0Xc0K/view"]},
+            {"index": 3, "title": "3. Quiz Question: Why only 1 Public Class in JAVA file","link":[""]},
+            {"index": 4, "title": "4. Java Variables - Part1 | Primitive Data Types in Depth","link":["https://drive.google.com/file/d/1vWVJ9nAIbih0vier0XD-jFaUCujWuYnU/view"]},
+            {"index": 5, "title": "5. How FLOAT and DOUBLE Number Stored in Memory? | IEEE 754 Representation","link":[""]},
+            {"index": 6, "title": "6. Java Variables - Part2 | Reference/Non-Primitive Data Types in Depth","link":["https://drive.google.com/file/d/1y23GVqAKPxQ72ZAP1_uOsJW2XfnBDhX5/view"]},
+            {"index": 7, "title": "7. Java Methods in Depth | Different Types of Methods with Examples","link":["https://drive.google.com/file/d/1KEMCFaA5phnL1qneiWPPsSeDGoRqFyWK/view"]},
+            {"index": 8, "title": "8. Java Constructor in Depth | Different Types of Constructor with Examples","link":["https://drive.google.com/file/d/1KEMCFaA5phnL1qneiWPPsSeDGoRqFyWK/view"]},
+            {"index": 9, "title": "9. Java Memory Management and Garbage Collection in Depth","link":["https://drive.google.com/file/d/1VLbaVl69r9FlKw2q_nI4qS6mlGx1t9Js/view"]},
+            {"index": 10, "title": "10. Java Classes - Part1 | Nested, Concrete, Abstract, Object, Super & Sub Classes","link":["https://drive.google.com/file/d/1eE5Pculcp0qem6tMPHDz9h-jhMclzGIt/view"]},
+            {"index": 11, "title": "11. Java Generic Classes | Java Classes in Depth - Part2","link":["https://drive.google.com/file/d/1eE5Pculcp0qem6tMPHDz9h-jhMclzGIt/view"]},
+            {"index": 12, "title": "12. Java Enum, POJO and Final Classes Explained with Examples | Java Classes - Part3","link":["https://notebook.zohopublic.in/public/notes/u3i1se962d56445eb4118ab4e4c0ca99e4728"]},
+            {"index": 13, "title": "13. Java Singleton & Immutable Class Explained with Examples | Java Classes - Part4","link":["https://notebook.zohopublic.in/public/notes/u3i1s340edd3a883b4ef7ac90874731c865b0"]},
+            {"index": 14, "title": "14. Java Interface in Depth - Part1","link":["https://notebook.zohopublic.in/public/notes/u3i1s033d318172e442b8b8f242767b93776c"]},
+            {"index": 15, "title": "15. Default, Static & Private Method in Interface - Java Interfaces Part-2","link":["https://notebook.zohopublic.in/public/notes/u3i1s033d318172e442b8b8f242767b93776c"]},
+            {"index": 16, "title": "16. Functional Interface and Lambda Expression - Java8 | Java Interface Part3","link":["https://notebook.zohopublic.in/public/notes/u3i1sa79b68153abe44d5aa93cc1d5b9f4dd9"]},
+            {"index": 17, "title": "17. Java Reflection in Depth (Using Examples)","link":["https://notebook.zohopublic.in/public/notes/u3i1sae669a127ac24a07842a488207750a7c"]},
+            {"index": 18, "title": "18. Java Annotations with Examples","link":["https://notebook.zohopublic.in/public/notes/u3i1se54e2f3438a84f42bec26cf3336a5226"]},
+            {"index": 19, "title": "19. Exception Handling in Java with Examples","link":["https://notebook.zohopublic.in/public/notes/u3i1se54e2f3438a84f42bec26cf3336a5226"]},
+            {"index": 20, "title": "20. Operators in Java | Different Types of Operators in JAVA","link":["https://notebook.zohopublic.in/public/notes/u3i1s38886070c7a74e9db5b0ec3b1697f7f8"]},
+            {"index": 21, "title": "21. Control Flow Statements in Java | Decision Making, Looping & Branching Statement","link":["https://notebook.zohopublic.in/public/notes/u3i1sa26424f5a9614b35897900c90fb2c402"]},
+            {"index": 22, "title": "22. Collections in Java - Part1 | Java Collections Framework in depth","link":["https://notebook.zohopublic.in/public/notes/u3i1sf9bea7a6f25c4a60941d06a07ac8d76c"]},
+            {"index": 23, "title": "23. Collections in Java - Part2 | Comparator Vs Comparable | PriorityQueue","link":["https://notebook.zohopublic.in/public/notes/u3i1sf9bea7a6f25c4a60941d06a07ac8d76c"]},
+            {"index": 24, "title": "24. Collections in Java - Part3 | Deque and List in Depth","link":["https://notebook.zohopublic.in/public/notes/u3i1sf9bea7a6f25c4a60941d06a07ac8d76c"]},
+            {"index": 25, "title": "25. Collections in Java - Part4 | HashMap Internal Working in Java","link":["https://notebook.zohopublic.in/public/notes/u3i1sf9bea7a6f25c4a60941d06a07ac8d76c","https://notebook.zohopublic.in/public/notes/74tdo79dc003d7a2846b9afdfa3f5df7f5d32"]},
+            {"index": 26, "title": "26. Collections in Java - Part5 | linked[HashMap and TreeMap in depth","link":["https://notebook.zohopublic.in/public/notes/u3i1sf9bea7a6f25c4a60941d06a07ac8d76c","https://notebook.zohopublic.in/public/notes/74tdo79dc003d7a2846b9afdfa3f5df7f5d32"]},
+            {"index": 27, "title": "27. Collections in Java - Part6 | SET","link":["https://notebook.zohopublic.in/public/notes/u3i1sf9bea7a6f25c4a60941d06a07ac8d76c","https://notebook.zohopublic.in/public/notes/74tdo79dc003d7a2846b9afdfa3f5df7f5d32"]},
+            {"index": 28, "title": "28. Streams in Java8 | Collections in Java - Part7","link":["https://notebook.zohopublic.in/public/notes/74tdod05928d081b5484fbfd5937d4129fa64"]},
+            {"index": 29, "title": "29. Multithreading and Concurrency in Java: Part1","link":["https://notebook.zohopublic.in/public/notes/74tdo52a4834de5554f09bc9ec3f11572cd11"]},
+            {"index": 30, "title": "30. Thread Creation, Thread Lifecycle and Inter-Thread Communication","link":["https://notebook.zohopublic.in/public/notes/74tdo47dcfcf05e644cf192c411a6d78ec1dc"]},
+            {"index": 31, "title": "31. Thread Joining, Daemon Thread, Thread Priority | Multithreading in Java","link":["https://notebook.zohopublic.in/public/notes/74tdob1b1f9bf584f44228974656f4d93519d"]},
+            {"index": 32, "title": "32. Locks and Condition | Java Multithreading","link":["https://notebook.zohopublic.in/public/notes/74tdo36e9543c1b8941ea9099d9f04b190404"]},
+            {"index": 33, "title": "33. Lock-Free Concurrency | Compare-and-Swap","link":["https://notebook.zohopublic.in/public/notes/74tdof6d5236d9b234442a814277c786bc6a2"]},
+            {"index": 34, "title": "34. Thread Pools in Java | ThreadPoolExecutor Framework | Multithreading","link":["https://notebook.zohopublic.in/public/notes/74tdo0e297bb7d6dd4d45a837d13f60fedc3f"]},
+            {"index": 35, "title": "35. Java8 CompletableFuture | Future & Callable in Java","link":["https://notebook.zohopublic.in/public/notes/74tdo4a0bd722efc748d0909fbb498fa21b18"]},
+            {"index": 36, "title": "36. ForkJoinPool, WorkStealingPool, FixedThreadPool, CachedThreadPool & SingleThread","link":["https://notebook.zohopublic.in/public/notes/74tdo77c24fe4d4df41c582e9041230f2cd6e"]},
+            {"index": 37, "title": "37. Java ScheduledThreadPoolExecutor || Shutdown Vs AwaitTermination","link":["https://notebook.zohopublic.in/public/notes/74tdo985cdf57a9bc40bdb37a4468a09b9554"]},
+            {"index": 38, "title": "38. Java VirtualThreads vs Normal Threads || ThreadLocal in Java","link":["https://notebook.zohopublic.in/public/notes/74tdo3074d38916474ae096fe57ad9f2ff54b"]},
+            {"index": 39, "title": "39. Project Lombok in Java in depth | Lombok top 10 features","link":["https://onedrive.live.com/:o:/g/personal/6b364628c29feb52/IgBJQS9wVkkaRI78ISwP-lLlAfGEeBDYaF6j_APJuTQmUmQ?rtime=pcVjGbho3kg&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE"]},
+            {"index": 40, "title": "40. Java 21 : SequencedCollection, SequencedSet and SequencedMap","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={702f4149-4956-441a-8efc-212c0ffa52e5}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE&wd=target%28New%20Section%201.one%7Ca2317700-a197-ab43-88a3-2fa20d9c961d%2FJava%2017%20Sealed%20Classes%20and%20Interfaces%7C874402e1-59aa-e841-95c3-e9999db469af%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 41, "title": "41. Java 17: Sealed Classes and Interfaces","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s702f41494956441a8efc212c0ffa52e5&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE&wd=target(New%20Section%201.one%7Ca2317700-a197-ab43-88a3-2fa20d9c961d%2FJava%2017%20Sealed%20Classes%20and%20Interfaces%7C874402e1-59aa-e841-95c3-e9999db469af%2F)&wdorigin=703&wdpartid=%7B47d819f5-1fd6-8301-0f31-f673580f7888%7D%7B1%7D&wdsectionfileid=6b364628c29feb52!s5ea4ea61f97446a99f59845c08e19cdd"]},
+            {"index": 42, "title": "42. Java 14: Switch Expressions Deep Dive","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={702f4149-4956-441a-8efc-212c0ffa52e5}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE&wd=target%28New%20Section%201.one%7Ca2317700-a197-ab43-88a3-2fa20d9c961d%2FJava%2014%20Switch%20Enhancements%7Ccebf3b04-99e5-c546-8354-e65c3b5f6f2d%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 43, "title": "43. Java 16: Pattern Matching for instanceof","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s702f41494956441a8efc212c0ffa52e5&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE&wd=target(New%20Section%201.one%7Ca2317700-a197-ab43-88a3-2fa20d9c961d%2FJava%2021%20Pattern%20Matching%20for%20Switch%7C06de45d5-e2ec-5a47-a001-8ee02b1c3c44%2F)&wdorigin=703&wdpartid=%7Bd1d49432-a347-2a01-1743-819992c9094d%7D%7B1%7D&wdsectionfileid=%7B6b364628c29feb52!s5ea4ea61f97446a99f59845c08e19cdd%7D"]},
+            {"index": 44, "title": "44. Java 21: Pattern Matching for switch","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={702f4149-4956-441a-8efc-212c0ffa52e5}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE&wd=target%28New%20Section%201.one%7Ca2317700-a197-ab43-88a3-2fa20d9c961d%2FJava%2021%20Pattern%20Matching%20for%20Switch%7C06de45d5-e2ec-5a47-a001-8ee02b1c3c44%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 45, "title": "45. Java 16: Record class","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={702f4149-4956-441a-8efc-212c0ffa52e5}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VrbEJMM0JXU1JwRWp2d2hMQV82VXVVQjhZUjRFTmhvWHFQOEE4bTVOQ1pTWkE&wd=target%28New%20Section%201.one%7Ca2317700-a197-ab43-88a3-2fa20d9c961d%2FJava%2016%20Records%7C80535ee7-7ddb-7e4a-887b-cb0502247c36%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 46, "title": "46. Java 15: Text Blocks","link":["https://drive.google.com/file/d/1DkRnpbBtgQQiFCuhWtjteWFWcEBGYS-9/view"]},
+            {"index": 47, "title": "47. Java Optional from Java 8 to 11,","link":["https://drive.google.com/file/d/14g1osv4HfhVIZ2rSlHeOW6F3tVkjqGZq/view"]}
         ],
         springboot: [
-            {"index": 48, "title": "48. Introduction to Spring boot | Its Advantage over Spring MVC and Servlets"},
-            {"index": 49, "title": "49. Spring boot Project setup and Layered Architecture Introduction"},
-            {"index": 50, "title": "50. Introduction to Maven and its Lifecycle | Spring boot Maven project"},
-            {"index": 51, "title": "51. Spring boot: Bean and its Lifecycle | Inversion of Control (IOC)"},
-            {"index": 52, "title": "52. Spring boot Annotations (Controller Layer) | Controller, RestController etc"},
-            {"index": 53, "title": "53. Dependency Injection in Spring boot | With Advantages and Disadvantages"},
-            {"index": 54, "title": "54. Spring boot : Bean Scopes | Singleton, Prototype, Request, Session Scopes"},
-            {"index": 55, "title": "55. Spring boot: Dynamically Initialized Beans | Value Annotation"},
-            {"index": 56, "title": "56. Spring boot @ConditionalOnProperty Annotation"},
-            {"index": 57, "title": "57. Spring boot @Profile annotation | How Profiling works in Spring boot"},
-            {"index": 58, "title": "58. Spring boot AOP (Aspect Oriented Programming)"},
-            {"index": 59, "title": "59. Spring boot @Transactional Annotation - Part1"},
-            {"index": 60, "title": "60. Transactional Annotation Part2 | Declarative,Programmatic Approach & Propagation"},
-            {"index": 61, "title": "61. Spring boot @Transactional Annotation - Part3 | Isolation Level and its types"},
-            {"index": 62, "title": "62. Spring boot @Async Annotation - Part1 | ThreadPoolExecutor"},
-            {"index": 63, "title": "63. @Async Annotation - Part2 | Async Annotation Important Interview questions"},
-            {"index": 64, "title": "64. Custom Interceptors | How to Intercept Incoming HTTP Request & Custom Annotation"},
-            {"index": 65, "title": "65. Filters vs Interceptors | Filters & Interceptors Advantage and Usecases for both"},
-            {"index": 66, "title": "66. Spring boot HATEOAS Restful API | Advantage, Disadvantage with Example"},
-            {"index": 67, "title": "67. Spring boot ResponseEntity & Response Codes | 1xx, 2xx, 3xx, 4xx and 5xx Codes"},
-            {"index": 68, "title": "68. Spring boot Exception Handling"},
-            {"index": 69, "title": "69. Spring boot : JPA (PART-1)"},
-            {"index": 70, "title": "70. Spring boot - JPA | JPA Setup, Architecture and Entity Relationship"},
-            {"index": 71, "title": "71. Spring boot: JPA | First Level Caching"},
-            {"index": 72, "title": "72. Spring boot: JPA | Second Level Caching"},
-            {"index": 73, "title": "73. Spring boot: JPA | Map DTO to Table"},
-            {"index": 74, "title": "74. Spring boot: JPA | OneToOne Mapping Unidirectional and Bidirectional"},
-            {"index": 75, "title": "75. Spring boot: JPA | OneToMany, ManyToOne and ManyToMany"},
-            {"index": 76, "title": "76. Spring boot: JPA | JPQL, Derived Query, N+1 Problem, Joins, Pagination"},
-            {"index": 77, "title": "77. Spring boot: JPA | Native Query and Criteria API"},
-            {"index": 78, "title": "78. Spring boot: JPA | Specification API"},
-            {"index": 79, "title": "79. Attacks with Demo | Spring Security | CSRF, CORS, XSS, SQL Injection"},
-            {"index": 80, "title": "80. Spring Boot Security - Part1 | Architecture"},
-            {"index": 81, "title": "81. Spring Boot Security - Part2 | User Creation & Storing Username & Password"},
-            {"index": 82, "title": "82. Spring Boot Security - Part3 | Form Based Authentication"},
-            {"index": 83, "title": "83. Spring Boot Security - Part4 | Basic Authentication"},
-            {"index": 84, "title": "84. Spring Boot Security : What is JWT and its Structure"},
-            {"index": 85, "title": "85. Spring Boot Security - JWT Authentication Implementation"},
-            {"index": 86, "title": "86. What is OAuth 2.0: Explained"},
-            {"index": 87, "title": "87. Spring Boot Security - OAUTH2 Authentication Implementation"},
-            {"index": 88, "title": "88. Spring Boot Security - Method Security | Role based Authorization"},
-            {"index": 89, "title": "89. RestTemplate | Communication between Microservices"},
-            {"index": 90, "title": "90. RestClient | Communication between Microservices"},
-            {"index": 91, "title": "91. FeignClient in Spring Boot Microservices | Declarative HTTP Client"},
-            {"index": 92, "title": "92. Service Discovery and its Implementation"},
-            {"index": 93, "title": "93. Client Side Load Balancer and its Implementation"},
-            {"index": 94, "title": "94. Rate Limiter"},
-            {"index": 95, "title": "95. Bulkhead Pattern"},
-            {"index": 96, "title": "96. Retry Pattern"},
-            {"index": 97, "title": "97. Circuit Breaker"},
-            {"index": 98, "title": "98. ApiGateway in Microservices - Part1 | Routing and Load Balancing"},
-            {"index": 99, "title": "99. ApiGateway in Microservices - Part2 | Authentication JWT, Circuit Breaker etc"},
-            {"index": 100, "title": "100. Central Configuration"},
-            {"index": 101, "title": "101. Actuator"},
-            {"index": 102, "title": "102. ConfigurationProperties in-depth"}
+            {"index": 48, "title": "48. Introduction to Spring boot | Its Advantage over Spring MVC and Servlets","link":["https://notebook.zohopublic.in/public/notes/bietvaf4a031eeb7245f19e651a16232e077a"]},
+            {"index": 49, "title": "49. Spring boot Project setup and Layered Architecture Introduction","link":["https://notebook.zohopublic.in/public/notes/bietv97e0afeb8fcf41e191da86e3898422b7"]},
+            {"index": 50, "title": "50. Introduction to Maven and its Lifecycle | Spring boot Maven project","link":["https://notebook.zohopublic.in/public/notes/bietv1d00e57bcbca4be89f155f6039985778"]},
+            {"index": 51, "title": "51. Spring boot: Bean and its Lifecycle | Inversion of Control (IOC)","link":["https://notebook.zohopublic.in/public/notes/bietv2018487e1de84b009904a4dfeda24def"]},
+            {"index": 52, "title": "52. Spring boot Annotations (Controller Layer) | Controller, RestController etc","link":["https://notebook.zohopublic.in/public/notes/bietv0de3bac30fbd41e7b1346bf9243ad3b2"]},
+            {"index": 53, "title": "53. Dependency Injection in Spring boot | With Advantages and Disadvantages","link":["https://notebook.zohopublic.in/public/notes/bietv964a637b52be4a1bbfde8d0309040a79"]},
+            {"index": 54, "title": "54. Spring boot : Bean Scopes | Singleton, Prototype, Request, Session Scopes","link":["https://notebook.zohopublic.in/public/notes/bietv379bff087eca47eaa84a3024d7e14b46"]},
+            {"index": 55, "title": "55. Spring boot: Dynamically Initialized Beans | Value Annotation","link":["https://notebook.zohopublic.in/public/notes/bietv13e5f5aeff684305a86e2d251aa4deed"]},
+            {"index": 56, "title": "56. Spring boot @ConditionalOnProperty Annotation","link":["https://notebook.zohopublic.in/public/notes/dcr5z97c7e76aa1454ea6a57e1a2dde4f8785"]},
+            {"index": 57, "title": "57. Spring boot @Profile annotation | How Profiling works in Spring boot","link":["https://notebook.zohopublic.in/public/notes/dcr5ze84495de6ad14cadbf5fe38b99b18b9d"]},
+            {"index": 58, "title": "58. Spring boot AOP (Aspect Oriented Programming)","link":["https://notebook.zohopublic.in/public/notes/dcr5z12bd30d9fbc2454e9881904115682227"]},
+            {"index": 59, "title": "59. Spring boot @Transactional Annotation - Part1","link":["https://notebook.zohopublic.in/public/notes/dcr5za43213ff940049e4857a26389eb54486"]},
+            {"index": 60, "title": "60. Transactional Annotation Part2 | Declarative,Programmatic Approach & Propagation","link":["https://notebook.zohopublic.in/public/notes/dcr5z827d4c4d67cf491494f30a7733eeb3e1"]},
+            {"index": 61, "title": "61. Spring boot @Transactional Annotation - Part3 | Isolation Level and its types","link":["https://notebook.zohopublic.in/public/notes/dcr5zd72620f1d2574b40a39fe1b017931423"]},
+            {"index": 62, "title": "62. Spring boot @Async Annotation - Part1 | ThreadPoolExecutor","link":["https://notebook.zohopublic.in/public/notes/dcr5zd72620f1d2574b40a39fe1b017931423"]},
+            {"index": 63, "title": "63. @Async Annotation - Part2 | Async Annotation Important Interview questions","link":["https://notebook.zohopublic.in/public/notes/dcr5z0896f8dfa8ad4dcfafa5d737b2b9c26d"]},
+            {"index": 64, "title": "64. Custom Interceptors | How to Intercept Incoming HTTP Request & Custom Annotation","link":["https://notebook.zohopublic.in/public/notes/dcr5zfbbb4128be4a406682b6a13ff80ed8fa"]},
+            {"index": 65, "title": "65. Filters vs Interceptors | Filters & Interceptors Advantage and Usecases for both","link":["https://notebook.zohopublic.in/public/notes/dcr5z502a3a0746974f36b75a50729b691d58"]},
+            {"index": 66, "title": "66. Spring boot HATEOAS Restful API | Advantage, Disadvantage with Example","link":["https://notebook.zohopublic.in/public/notes/dcr5z26771d816c4f47b7a63d7e1d45129fd7"]},
+            {"index": 67, "title": "67. Spring boot ResponseEntity & Response Codes | 1xx, 2xx, 3xx, 4xx and 5xx Codes","link":["https://notebook.zohopublic.in/public/notes/9wn9o2148145a9ab9476ca8b75e801ca27882"]},
+            {"index": 68, "title": "68. Spring boot Exception Handling","link":["https://notebook.zohopublic.in/public/notes/9wn9o7260a3af90164c31941f061955edb73d"]},
+            {"index": 69, "title": "69. Spring boot : JPA (PART-1)","link":["https://notebook.zohopublic.in/public/notes/9wn9o634e8b2e46734882b52ecfd06aa4a162"]},
+            {"index": 70, "title": "70. Spring boot - JPA | JPA Setup, Architecture and Entity Relationship","link":["https://notebook.zohopublic.in/public/notes/9wn9o5fd6c0f15d68425d9b98284f48186179"]},
+            {"index": 71, "title": "71. Spring boot: JPA | First Level Caching","link":["https://notebook.zohopublic.in/public/notes/9wn9o2d75e726a75c4b7eb7aaec1bd35d99b5"]},
+            {"index": 72, "title": "72. Spring boot: JPA | Second Level Caching","link":["https://notebook.zohopublic.in/public/notes/9wn9o30b391bbe74c408eb8c70d306be98258"]},
+            {"index": 73, "title": "73. Spring boot: JPA | Map DTO to Table","link":["https://notebook.zohopublic.in/public/notes/9wn9ob681f4fe22c8412db0729f618737a416"]},
+            {"index": 74, "title": "74. Spring boot: JPA | OneToOne Mapping Unidirectional and Bidirectional","link":["https://onedrive.live.com/:o:/g/personal/6B364628C29FEB52/EksLbbBuPIhDjFYNjtEw6kEB7wRxe5wd2oWXREL9gKphEg?resid=6B364628C29FEB52!sb06d0b4b3c6e43888c560d8ed130ea41&ithint=onenote&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc"]},
+            {"index": 75, "title": "75. Spring boot: JPA | OneToMany, ManyToOne and ManyToMany","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!sb06d0b4b3c6e43888c560d8ed130ea41&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc&wd=target(SpringBoot.one%7C80d0b2b8-f2e3-1b4b-baff-c5631c171a8d%2F28%20JPA-Part7%7Cc05da5c9-db1e-1941-8ab3-21374751063e%2F)&wdorigin=703&wdpartid=%7B0439f735-bb34-a149-9bad-7e18f23dd5ee%7D%7B1%7D&wdsectionfileid=%7B6b364628c29feb52!s3bf1efc3171345eca13f4d914d632959%7D"]},
+            {"index": 76, "title": "76. Spring boot: JPA | JPQL, Derived Query, N+1 Problem, Joins, Pagination","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!sb06d0b4b3c6e43888c560d8ed130ea41&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc&wd=target(SpringBoot.one%7C80d0b2b8-f2e3-1b4b-baff-c5631c171a8d%2F29%20JPA-Part8%7C5f51b610-41b8-e74e-b3c2-a3366373cbde%2F)&wdorigin=703&wdpartid=%7B671fb615-4590-5346-a9fc-4b24c05dbf2e%7D%7B1%7D&wdsectionfileid=%7B6b364628c29feb52!s3bf1efc3171345eca13f4d914d632959%7D"]},
+            {"index": 77, "title": "77. Spring boot: JPA | Native Query and Criteria API","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={b06d0b4b-3c6e-4388-8c56-0d8ed130ea41}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc&wd=target%28SpringBoot.one%7C80d0b2b8-f2e3-1b4b-baff-c5631c171a8d%2F27%20%20OneToOne%20Mapping%20%28Unidirectional%20and%20Bidirectional%5C%29%7C2fb9bed0-1ac8-804e-88b5-41ab8776fcf7%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 78, "title": "78. Spring boot: JPA | Specification API","link":["https://onedrive.live.com/:o:/g/personal/6B364628C29FEB52/EksLbbBuPIhDjFYNjtEw6kEB7wRxe5wd2oWXREL9gKphEg?resid=6B364628C29FEB52!sb06d0b4b3c6e43888c560d8ed130ea41&ithint=onenote&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc"]},
+            {"index": 79, "title": "79. Attacks with Demo | Spring Security | CSRF, CORS, XSS, SQL Injection","link":["https://onedrive.live.com/:o:/g/personal/6B364628C29FEB52/EksLbbBuPIhDjFYNjtEw6kEB7wRxe5wd2oWXREL9gKphEg?resid=6B364628C29FEB52!sb06d0b4b3c6e43888c560d8ed130ea41&ithint=onenote&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc"]},
+            {"index": 80, "title": "80. Spring Boot Security - Part1 | Architecture","link":["https://drive.google.com/file/d/1mBC4cBF9CIoEhBEPJMQuNkymocGcvyJ6/view"]},
+            {"index": 81, "title": "81. Spring Boot Security - Part2 | User Creation & Storing Username & Password","link":["https://drive.google.com/file/d/1HKMoc-gPt8Sv05ePDcJmRg_XXA2_h1Ua/view"]},
+            {"index": 82, "title": "82. Spring Boot Security - Part3 | Form Based Authentication","link":["https://drive.google.com/file/d/1HKMoc-gPt8Sv05ePDcJmRg_XXA2_h1Ua/view"]},
+            {"index": 83, "title": "83. Spring Boot Security - Part4 | Basic Authentication","link":["https://drive.google.com/file/d/17oyaGwIItZpsRyQsDjXwHr1WUuFcVUAe/view"]},
+            {"index": 84, "title": "84. Spring Boot Security : What is JWT and its Structure","link":["https://notebook.zohopublic.in/public/notes/bietvcd2cffdd8c7d449c839c007fecf8d562"]},
+            {"index": 85, "title": "85. Spring Boot Security - JWT Authentication Implementation","link":["https://gitlab.com/shrayansh8/interviewcodingpractise/-/tree/main/src/main/java/com/conceptandcoding/learningspringboot","https://drive.google.com/file/d/14GgIwnzFW50cSV4mx_hcU2Vd8gHPAeXN/view"]},
+            {"index": 86, "title": "86. What is OAuth 2.0: Explained","link":["https://notebook.zohopublic.in/public/notes/bietv949cfd82a5804e0ea1d18400d3ff6fa3"]},
+            {"index": 87, "title": "87. Spring Boot Security - OAUTH2 Authentication Implementation","link":["https://gitlab.com/shrayansh8/interviewcodingpractise/-/tree/main/src/main/java/com/conceptandcoding/learningspringboot/OAuth","https://drive.google.com/file/d/1KyVQvaGbSFeMAl9cVgY27Zwgy68UevSn/view"]},
+            {"index": 88, "title": "88. Spring Boot Security - Method Security | Role based Authorization","link":["https://drive.google.com/file/d/1ip1EDOlGBGJWtD1wGHro1P7OLbnhXIPR/view"]},
+            {"index": 89, "title": "89. RestTemplate | Communication between Microservices","link":["https://onedrive.live.com/:o:/g/personal/6B364628C29FEB52/EnNyY5Kpac1Pg8vODA24BTwBNlyhDvReEg-KDVZ7Me_ZZA?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&ithint=onenote&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE"]},
+            {"index": 90, "title": "90. RestClient | Communication between Microservices","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FRestClient%7C0d8b2f2c-6b98-4a43-b5e7-c85058aaed36%2F)&wdorigin=703&wdpartid=%7B1aa52097-7ccd-f643-b337-5b2fc83f867f%7D%7B1%7D&wdsectionfileid=6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692"]},
+            {"index": 91, "title": "91. FeignClient in Spring Boot Microservices | Declarative HTTP Client","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FFeignClient%7C58a280a8-cde1-2744-9639-da22cbd670c2%2F)&wdorigin=703&wdpartid=%7B373c9d93-f9c7-7946-bc81-bb91743d3625%7D%7B1%7D&wdsectionfileid=6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692"]},
+            {"index": 92, "title": "92. Service Discovery and its Implementation","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FService%20Discovery%7Cbe9efdfc-f515-344f-b765-9b58c71e6cdb%2F)&wdorigin=703&wdpartid=%7B1d6ee994-9a33-9e49-9efe-8d00ba724950%7D%7B1%7D&wdsectionfileid=6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692"]},
+            {"index": 93, "title": "93. Client Side Load Balancer and its Implementation","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={92637273-69a9-4fcd-83cb-ce0c0db8053c}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target%28New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FClient%20Side%20Load%20Balancer%7Ca0e35fce-9ab3-774d-a9a5-1a83bcd9e0f9%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 94, "title": "94. Rate Limiter","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FResilience4j%20Building%20Fault-Tolerant%20Microservice%7Ca0095666-1317-4f4c-b672-a8915839634d%2F)&wdorigin=703&wdpartid=%7B33040e75-114a-e603-3e60-15ff88227e15%7D%7B1%7D&wdsectionfileid=6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692"]},
+            {"index": 95, "title": "95. Bulkhead Pattern","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={92637273-69a9-4fcd-83cb-ce0c0db8053c}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target%28New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FBulkhead%20Fault-Tolerant%20Microservice%20%28Part-2%5C%29%7Cc82898a8-8c19-df43-a956-00d6d5ce44fc%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 96, "title": "96. Retry Pattern","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FRetry%20Fault-Tolerant%20Microservice%20(Part-3%5C)%7C8d82083b-9805-4b47-bafa-6cea3f88f6a4%2F)&wdorigin=703&wdpartid=%7B04c0293d-7c70-3b0b-126c-4bf3b6964a94%7D%7B1%7D&wdsectionfileid=6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692"]},
+            {"index": 97, "title": "97. Circuit Breaker","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={92637273-69a9-4fcd-83cb-ce0c0db8053c}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target%28New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FCircuit%20Breaker%20Fault-Tolerant%20Microservice%20%28Part-%7Caff21d09-7e7c-4a43-b09c-50e7a2c70e82%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 98, "title": "98. ApiGateway in Microservices - Part1 | Routing and Load Balancing","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FAPI%20Gateway%7C3bb17da8-1963-2f47-b15a-a530443924cf%2F)&wdorigin=703&wdpartid=%7B525681df-dce3-a70d-100b-292531aa3913%7D%7B1%7D&wdsectionfileid=%7B6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692%7D","https://gitlab.com/shrayansh8/springboot-microservices/-/tree/main/apigateway_part1?ref_type=heads"]},
+            {"index": 99, "title": "99. ApiGateway in Microservices - Part2 | Authentication JWT, Circuit Breaker etc","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!s9263727369a94fcd83cbce0c0db8053c&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target(New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FAPI%20Gateway%20-%20Part2%7C669be8ba-609d-734a-a8ce-72a0ea3e27cc%2F)&wdorigin=703&wdpartid=%7B620e8163-706d-bf0a-3e78-7067f0466108%7D%7B1%7D&wdsectionfileid=%7B6b364628c29feb52!s1965afa38c4142d88d16f8c0aad11692%7D","https://gitlab.com/shrayansh8/springboot-microservices/-/tree/main/apigateway_part2/apigateway?ref_type=heads"]},
+            {"index": 100, "title": "100. Central Configuration","link":["https://onedrive.live.com/personal/6b364628c29feb52/_layouts/15/Doc.aspx?sourcedoc={92637273-69a9-4fcd-83cb-ce0c0db8053c}&action=view&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0VuTnlZNUtwYWMxUGc4dk9EQTI0QlR3Qk5seWhEdlJlRWctS0RWWjdNZV9aWkE&wd=target%28New%20Section%201.one%7C1c705580-121a-3746-9837-b97f7646a06a%2FCentralized%20Configuration%7Cfc15fdca-d6a1-8f40-b677-08a3d45ac351%2F%29&wdorigin=NavigationUrl"]},
+            {"index": 101, "title": "101. Actuator","link":["https://onedrive.live.com/view.aspx?resid=6B364628C29FEB52!sb06d0b4b3c6e43888c560d8ed130ea41&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL28vYy82YjM2NDYyOGMyOWZlYjUyL0Vrc0xiYkJ1UEloRGpGWU5qdEV3NmtFQjd3UnhlNXdkMm9XWFJFTDlnS3BoRWc&wd=target(SpringBoot.one%7C80d0b2b8-f2e3-1b4b-baff-c5631c171a8d%2FSpringboot%20Actuator%7Cf5ace718-c2e0-634d-b66e-47f45a64c339%2F)&wdorigin=703&wdpartid=%7B116a9a2f-db09-ee07-28aa-051cd4890198%7D%7B1%7D&wdsectionfileid=%7B6b364628c29feb52!s3bf1efc3171345eca13f4d914d632959%7D"]},
+            {"index": 102, "title": "102. ConfigurationProperties in-depth","link":["https://drive.google.com/file/d/1RL9oQH_aESt4Z8ZKjOshDxbjVgF9BT0L/view"	]
+            }
         ]
     };
 
-    function populateTable(tableId, items) {
-        const tbody = document.getElementById(tableId);
+
+    function showPhase(phase) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        if(event) event.currentTarget.classList.add('active');
+
+        document.querySelectorAll('.phase-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(phase + '-section').classList.add('active');
+    }
+
+    function generatePreviewButtons(links) {
+        const validLinks = links.filter(l => l && l.trim() !== "");
+        if (validLinks.length === 0) return `<span class="btn-preview btn-disabled">No Preview</span>`;
+        return validLinks.map((link, i) => {
+            const label = validLinks.length > 1 ? `Preview ${i + 1}` : `Preview`;
+            return `<a href="${link}" target="_blank" class="btn-preview">${label}</a>`;
+        }).join('');
+    }
+
+    function populateTables() {
+        renderSection('java-body', data.java);
+        renderSection('springboot-body', data.springboot);
+        updateCounts();
+    }
+
+    function renderSection(tbodyId, items) {
+        const tbody = document.getElementById(tbodyId);
+        tbody.innerHTML = '';
         items.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="status-col"><input type="checkbox" onchange="toggleStrike(this)"></td>
-                <td class="index-col">${item.index}</td>
+                <td class="index-col">#${item.index}</td>
                 <td class="title-cell">${item.title}</td>
+                <td class="preview-col">${generatePreviewButtons(item.link)}</td>
             `;
             tbody.appendChild(row);
         });
     }
 
-    function toggleStrike(checkbox) {
-        const titleCell = checkbox.parentElement.nextElementSibling.nextElementSibling;
-        if (checkbox.checked) {
-            titleCell.classList.add('completed');
-        } else {
-            titleCell.classList.remove('completed');
-        }
+    function filterTopics() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        
+        const filterSection = (tbodyId, items) => {
+            const rows = document.getElementById(tbodyId).getElementsByTagName('tr');
+            let matchCount = 0;
+            
+            for (let i = 0; i < rows.length; i++) {
+                const title = items[i].title.toLowerCase();
+                if (title.includes(query)) {
+                    rows[i].style.display = "";
+                    matchCount++;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+            return matchCount;
+        };
+
+        const javaMatches = filterSection('java-body', data.java);
+        const springMatches = filterSection('springboot-body', data.springboot);
+
+        document.getElementById('java-count').innerText = javaMatches;
+        document.getElementById('springboot-count').innerText = springMatches;
     }
 
-    populateTable('java-body', data.java);
-    populateTable('springboot-body', data.springboot);
+    function updateCounts() {
+        document.getElementById('java-count').innerText = data.java.length;
+        document.getElementById('springboot-count').innerText = data.springboot.length;
+    }
+
+    function toggleStrike(checkbox) {
+        const row = checkbox.closest('tr');
+        const titleCell = row.querySelector('.title-cell');
+        checkbox.checked ? titleCell.classList.add('completed') : titleCell.classList.remove('completed');
+    }
+
+    // Initial Load
+    populateTables();
 </script>
 
 </body>
