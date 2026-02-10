@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java & Spring Boot Curriculum</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 40px; border-left: 5px solid #2980b9; padding-left: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #3498db; color: white; position: sticky; top: 0; }
+        tr:hover { background-color: #f1f1f1; }
+        .index-col { width: 60px; font-weight: bold; color: #7f8c8d; }
+        .status-col { width: 80px; text-align: center; }
+        input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
+        .completed { text-decoration: line-through; color: #95a5a6; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Java & Spring Boot Roadmap</h1>
+
+    <h2>Phase 1: Core Java</h2>
+    <table id="java-table">
+        <thead>
+            <tr>
+                <th class="status-col">Done</th>
+                <th class="index-col">#</th>
+                <th>Lecture Title</th>
+            </tr>
+        </thead>
+        <tbody id="java-body"></tbody>
+    </table>
+
+    <h2>Phase 2: Spring Boot & Microservices</h2>
+    <table id="springboot-table">
+        <thead>
+            <tr>
+                <th class="status-col">Done</th>
+                <th class="index-col">#</th>
+                <th>Lecture Title</th>
+            </tr>
+        </thead>
+        <tbody id="springboot-body"></tbody>
+    </table>
+</div>
+
+<script>
+    const data = {
+        java: [
+            {"index": 1, "title": "1. OOPs Fundamentals | 4 Pillar of Java"},
+            {"index": 2, "title": "2. How Java Program Works and its 3 Important Components (JVM, JRE and JDK)"},
+            {"index": 3, "title": "3. Quiz Question: Why only 1 Public Class in JAVA file"},
+            {"index": 4, "title": "4. Java Variables - Part1 | Primitive Data Types in Depth"},
+            {"index": 5, "title": "5. How FLOAT and DOUBLE Number Stored in Memory? | IEEE 754 Representation"},
+            {"index": 6, "title": "6. Java Variables - Part2 | Reference/Non-Primitive Data Types in Depth"},
+            {"index": 7, "title": "7. Java Methods in Depth | Different Types of Methods with Examples"},
+            {"index": 8, "title": "8. Java Constructor in Depth | Different Types of Constructor with Examples"},
+            {"index": 9, "title": "9. Java Memory Management and Garbage Collection in Depth"},
+            {"index": 10, "title": "10. Java Classes - Part1 | Nested, Concrete, Abstract, Object, Super & Sub Classes"},
+            {"index": 11, "title": "11. Java Generic Classes | Java Classes in Depth - Part2"},
+            {"index": 12, "title": "12. Java Enum, POJO and Final Classes Explained with Examples | Java Classes - Part3"},
+            {"index": 13, "title": "13. Java Singleton & Immutable Class Explained with Examples | Java Classes - Part4"},
+            {"index": 14, "title": "14. Java Interface in Depth - Part1"},
+            {"index": 15, "title": "15. Default, Static & Private Method in Interface - Java Interfaces Part-2"},
+            {"index": 16, "title": "16. Functional Interface and Lambda Expression - Java8 | Java Interface Part3"},
+            {"index": 17, "title": "17. Java Reflection in Depth (Using Examples)"},
+            {"index": 18, "title": "18. Java Annotations with Examples"},
+            {"index": 19, "title": "19. Exception Handling in Java with Examples"},
+            {"index": 20, "title": "20. Operators in Java | Different Types of Operators in JAVA"},
+            {"index": 21, "title": "21. Control Flow Statements in Java | Decision Making, Looping & Branching Statement"},
+            {"index": 22, "title": "22. Collections in Java - Part1 | Java Collections Framework in depth"},
+            {"index": 23, "title": "23. Collections in Java - Part2 | Comparator Vs Comparable | PriorityQueue"},
+            {"index": 24, "title": "24. Collections in Java - Part3 | Deque and List in Depth"},
+            {"index": 25, "title": "25. Collections in Java - Part4 | HashMap Internal Working in Java"},
+            {"index": 26, "title": "26. Collections in Java - Part5 | LinkedHashMap and TreeMap in depth"},
+            {"index": 27, "title": "27. Collections in Java - Part6 | SET"},
+            {"index": 28, "title": "28. Streams in Java8 | Collections in Java - Part7"},
+            {"index": 29, "title": "29. Multithreading and Concurrency in Java: Part1"},
+            {"index": 30, "title": "30. Thread Creation, Thread Lifecycle and Inter-Thread Communication"},
+            {"index": 31, "title": "31. Thread Joining, Daemon Thread, Thread Priority | Multithreading in Java"},
+            {"index": 32, "title": "32. Locks and Condition | Java Multithreading"},
+            {"index": 33, "title": "33. Lock-Free Concurrency | Compare-and-Swap"},
+            {"index": 34, "title": "34. Thread Pools in Java | ThreadPoolExecutor Framework | Multithreading"},
+            {"index": 35, "title": "35. Java8 CompletableFuture | Future & Callable in Java"},
+            {"index": 36, "title": "36. ForkJoinPool, WorkStealingPool, FixedThreadPool, CachedThreadPool & SingleThread"},
+            {"index": 37, "title": "37. Java ScheduledThreadPoolExecutor || Shutdown Vs AwaitTermination"},
+            {"index": 38, "title": "38. Java VirtualThreads vs Normal Threads || ThreadLocal in Java"},
+            {"index": 39, "title": "39. Project Lombok in Java in depth | Lombok top 10 features"},
+            {"index": 40, "title": "40. Java 21 : SequencedCollection, SequencedSet and SequencedMap"},
+            {"index": 41, "title": "41. Java 17: Sealed Classes and Interfaces"},
+            {"index": 42, "title": "42. Java 14: Switch Expressions Deep Dive"},
+            {"index": 43, "title": "43. Java 16: Pattern Matching for instanceof"},
+            {"index": 44, "title": "44. Java 21: Pattern Matching for switch"},
+            {"index": 45, "title": "45. Java 16: Record class"},
+            {"index": 46, "title": "46. Java 15: Text Blocks"},
+            {"index": 47, "title": "47. Java Optional from Java 8 to 11"}
+        ],
+        springboot: [
+            {"index": 48, "title": "48. Introduction to Spring boot | Its Advantage over Spring MVC and Servlets"},
+            {"index": 49, "title": "49. Spring boot Project setup and Layered Architecture Introduction"},
+            {"index": 50, "title": "50. Introduction to Maven and its Lifecycle | Spring boot Maven project"},
+            {"index": 51, "title": "51. Spring boot: Bean and its Lifecycle | Inversion of Control (IOC)"},
+            {"index": 52, "title": "52. Spring boot Annotations (Controller Layer) | Controller, RestController etc"},
+            {"index": 53, "title": "53. Dependency Injection in Spring boot | With Advantages and Disadvantages"},
+            {"index": 54, "title": "54. Spring boot : Bean Scopes | Singleton, Prototype, Request, Session Scopes"},
+            {"index": 55, "title": "55. Spring boot: Dynamically Initialized Beans | Value Annotation"},
+            {"index": 56, "title": "56. Spring boot @ConditionalOnProperty Annotation"},
+            {"index": 57, "title": "57. Spring boot @Profile annotation | How Profiling works in Spring boot"},
+            {"index": 58, "title": "58. Spring boot AOP (Aspect Oriented Programming)"},
+            {"index": 59, "title": "59. Spring boot @Transactional Annotation - Part1"},
+            {"index": 60, "title": "60. Transactional Annotation Part2 | Declarative,Programmatic Approach & Propagation"},
+            {"index": 61, "title": "61. Spring boot @Transactional Annotation - Part3 | Isolation Level and its types"},
+            {"index": 62, "title": "62. Spring boot @Async Annotation - Part1 | ThreadPoolExecutor"},
+            {"index": 63, "title": "63. @Async Annotation - Part2 | Async Annotation Important Interview questions"},
+            {"index": 64, "title": "64. Custom Interceptors | How to Intercept Incoming HTTP Request & Custom Annotation"},
+            {"index": 65, "title": "65. Filters vs Interceptors | Filters & Interceptors Advantage and Usecases for both"},
+            {"index": 66, "title": "66. Spring boot HATEOAS Restful API | Advantage, Disadvantage with Example"},
+            {"index": 67, "title": "67. Spring boot ResponseEntity & Response Codes | 1xx, 2xx, 3xx, 4xx and 5xx Codes"},
+            {"index": 68, "title": "68. Spring boot Exception Handling"},
+            {"index": 69, "title": "69. Spring boot : JPA (PART-1)"},
+            {"index": 70, "title": "70. Spring boot - JPA | JPA Setup, Architecture and Entity Relationship"},
+            {"index": 71, "title": "71. Spring boot: JPA | First Level Caching"},
+            {"index": 72, "title": "72. Spring boot: JPA | Second Level Caching"},
+            {"index": 73, "title": "73. Spring boot: JPA | Map DTO to Table"},
+            {"index": 74, "title": "74. Spring boot: JPA | OneToOne Mapping Unidirectional and Bidirectional"},
+            {"index": 75, "title": "75. Spring boot: JPA | OneToMany, ManyToOne and ManyToMany"},
+            {"index": 76, "title": "76. Spring boot: JPA | JPQL, Derived Query, N+1 Problem, Joins, Pagination"},
+            {"index": 77, "title": "77. Spring boot: JPA | Native Query and Criteria API"},
+            {"index": 78, "title": "78. Spring boot: JPA | Specification API"},
+            {"index": 79, "title": "79. Attacks with Demo | Spring Security | CSRF, CORS, XSS, SQL Injection"},
+            {"index": 80, "title": "80. Spring Boot Security - Part1 | Architecture"},
+            {"index": 81, "title": "81. Spring Boot Security - Part2 | User Creation & Storing Username & Password"},
+            {"index": 82, "title": "82. Spring Boot Security - Part3 | Form Based Authentication"},
+            {"index": 83, "title": "83. Spring Boot Security - Part4 | Basic Authentication"},
+            {"index": 84, "title": "84. Spring Boot Security : What is JWT and its Structure"},
+            {"index": 85, "title": "85. Spring Boot Security - JWT Authentication Implementation"},
+            {"index": 86, "title": "86. What is OAuth 2.0: Explained"},
+            {"index": 87, "title": "87. Spring Boot Security - OAUTH2 Authentication Implementation"},
+            {"index": 88, "title": "88. Spring Boot Security - Method Security | Role based Authorization"},
+            {"index": 89, "title": "89. RestTemplate | Communication between Microservices"},
+            {"index": 90, "title": "90. RestClient | Communication between Microservices"},
+            {"index": 91, "title": "91. FeignClient in Spring Boot Microservices | Declarative HTTP Client"},
+            {"index": 92, "title": "92. Service Discovery and its Implementation"},
+            {"index": 93, "title": "93. Client Side Load Balancer and its Implementation"},
+            {"index": 94, "title": "94. Rate Limiter"},
+            {"index": 95, "title": "95. Bulkhead Pattern"},
+            {"index": 96, "title": "96. Retry Pattern"},
+            {"index": 97, "title": "97. Circuit Breaker"},
+            {"index": 98, "title": "98. ApiGateway in Microservices - Part1 | Routing and Load Balancing"},
+            {"index": 99, "title": "99. ApiGateway in Microservices - Part2 | Authentication JWT, Circuit Breaker etc"},
+            {"index": 100, "title": "100. Central Configuration"},
+            {"index": 101, "title": "101. Actuator"},
+            {"index": 102, "title": "102. ConfigurationProperties in-depth"}
+        ]
+    };
+
+    function populateTable(tableId, items) {
+        const tbody = document.getElementById(tableId);
+        items.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="status-col"><input type="checkbox" onchange="toggleStrike(this)"></td>
+                <td class="index-col">${item.index}</td>
+                <td class="title-cell">${item.title}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function toggleStrike(checkbox) {
+        const titleCell = checkbox.parentElement.nextElementSibling.nextElementSibling;
+        if (checkbox.checked) {
+            titleCell.classList.add('completed');
+        } else {
+            titleCell.classList.remove('completed');
+        }
+    }
+
+    populateTable('java-body', data.java);
+    populateTable('springboot-body', data.springboot);
+</script>
+
+</body>
+</html>
